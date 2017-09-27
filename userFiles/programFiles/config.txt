@@ -1,0 +1,3 @@
+###   Absolute path to the file that needs cleaning     ###
+C:\Users\jbles\Desktop\testdata\dirtyFile.txt
+#
