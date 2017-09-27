@@ -333,6 +333,7 @@ namespace cleaner3._0
            // List<string> contentRemovedList = new List<string>();
 
             SortedDictionary<int, string> badContentDict = new SortedDictionary<int, string>();
+            SortedDictionary<int, string> shortContentDict = new SortedDictionary<int, string>();
 
 
             acceptedCharList = populateStringListByCharecter(Globals.acceptedCharsFile); //put accepted chars file into a list
@@ -360,8 +361,13 @@ namespace cleaner3._0
                 { //if a generic word was not found
                     foreach (int x in data)
                     {
-                        if (!acceptedCharList.Contains(x) || data.Length <= 3)
+                        if (data.Trim().Length <= 3)
                         { //if a charecter is found not in the accepted list
+                            shortContentDict.Add(currentRow, data);
+                            break;
+                        }
+                        else if (!acceptedCharList.Contains(x))
+                        {
                             badContentDict.Add(currentRow, data);
                             break;
                         }
@@ -388,7 +394,7 @@ namespace cleaner3._0
                 int thisRow = 0;
                 while ((line = dirtyReader.ReadLine()) != null)
                 {
-                    if (!badContentDict.ContainsKey(thisRow))
+                    if (!badContentDict.ContainsKey(thisRow) && !shortContentDict.ContainsKey(thisRow))
                     {// Only enter if the row is valid
                         cleanFileWriter.WriteLine(line);
                     }
@@ -410,9 +416,10 @@ namespace cleaner3._0
             //checked overalcontent
 
             string contentRemovedFile = getDirectoryOf(Globals.dirtyFile) + "contentRemoved.txt";
+            string contentShortFile = getDirectoryOf(Globals.dirtyFile) + "contentShortRemoved.txt";
 
             writeDictValueToFile(badContentDict, contentRemovedFile);
-
+            writeDictValueToFile(shortContentDict, contentShortFile);
 
 
 
